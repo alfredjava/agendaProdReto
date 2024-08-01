@@ -3,6 +3,7 @@ package com.agendapro.demo.controller;
 
 import com.agendapro.demo.model.Product;
 import com.agendapro.demo.service.ProductService;
+import com.agendapro.demo.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private StatisticsService statisticsService;
+
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+
+        Product createdProduct = productService.createProduct(product);
+        statisticsService.updateStatistics(product.getCategory());
+        return createdProduct;
     }
 
     @PutMapping("/{id}")
